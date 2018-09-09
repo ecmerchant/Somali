@@ -1,2 +1,105 @@
-<h1>Products#search</h1>
-<p>Find me in app/views/products/search.html.erb</p>
+<div class="page-header" id="banner">
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <h3>商品情報を取得</h3>
+      <button id="run_search" class="btn btn-primary">取得開始</button>
+      <div><br></div>
+      <div id="result_table"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    // create table for ASIN
+    var cheaders = [];
+    var cwidth = [];
+    var mydata = [];
+    var colOption = [];
+    <% data = Array.new %>
+    <% jj = 0 %>
+    <% Product.column_names.each_with_index do |name, i| %>
+      <% if i > 1 && i < Product.column_names.length - 2 then %>
+        cheaders.push("<%= name %>");
+        cwidth.push(100);
+        <% data.push(@products.pluck(name)) %>
+      <% end %>
+    <% end %>
+
+    <% data = data.transpose %>
+
+    var maxColnum = cheaders.length;
+    var maxRownum = <%= data.length %> + 5;
+    var colOption = [];
+
+    <% data.each_with_index do |row, ii| %>
+      mydata[<%= ii %>] = [];
+      <% row.each_with_index do |col, jj| %>
+        mydata[<%= ii %>][<%= jj %>] = "<%= col %>";
+      <% end %>
+    <% end %>
+
+    for(var k = <%= data.length %>; k < <%= data.length %> + 5; k++){
+      mydata[k] = [];
+      for(var m = 0; m < cheaders.length; m++){
+        mydata[k][m] = "";
+      }
+    }
+
+    var container = document.getElementById('result_table');
+    var handsontable = new Handsontable(container, {
+      /* オプション */
+      width: 1100,
+      height: 380,
+      contextMenu: true,
+      data: mydata,
+      rowHeaders: true,
+      colHeaders: cheaders,
+      maxCols: maxColnum,
+      maxRows: maxRownum,
+      manualColumnResize: true,
+      autoColumnSize: false,
+      colWidths: cwidth,
+      wordWrap: false
+    });
+
+
+    $("#run_search").click(function () {
+      alert("go");
+      var body = handsontable.getDataAtCol(0);
+      body = JSON.stringify(body);
+      var rnum = 0;
+
+      repeat(rnum);
+
+    });
+
+    function repeat(rnum){
+      var body = handsontable.getDataAtCol(0);
+      body = JSON.stringify(body);
+      var myData = {data: body, rnum: rnum};
+
+      $.ajax({
+        url: "/products/get",
+        type: "POST",
+        data: myData,
+        dataType: "json",
+        success: function (result) {
+          alert("OK");
+          alert(result);
+          mydata[rnum] = result;
+          handsontable.loadData(mydata);
+          rnum++;
+          if(rnum > 4){
+            return;
+          }
+          repeat(rnum);
+        },
+        error: function () {
+          alert("NG");
+        }
+      });
+    };
+
+  });
+</script>

@@ -1,5 +1,22 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
+
+  root to: 'products#search'
   get 'products/search'
+  post 'products/search'
+
+  post 'products/get'
+
+  get 'products/setup'
+  post 'products/setup'
+
+  mount Resque::Server.new, at: "/resque"
+
+  devise_scope :user do
+    get '/users/sign_out' => 'devise/sessions#destroy'
+    get '/sign_in' => 'devise/sessions#new'
+  end
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users

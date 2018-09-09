@@ -1,0 +1,45 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  asin: MyString
+  condition: MyString
+  new_sale1: 1
+  new_sale2: 1
+  new_sale3: 1
+  new_avg3: 1
+  used_sale1: 1
+  used_sale2: 1
+  used_sale3: 1
+  used_avg3: 1
+  check1: false
+  cart_price: 1
+  cart_income: 1
+  used_price: 1
+  used_income: 1
+  check2: false
+  title: MyString
+  mpn: MyString
+  item_image: MyString
+
+two:
+  user: MyString
+  asin: MyString
+  condition: MyString
+  new_sale1: 1
+  new_sale2: 1
+  new_sale3: 1
+  new_avg3: 1
+  used_sale1: 1
+  used_sale2: 1
+  used_sale3: 1
+  used_avg3: 1
+  check1: false
+  cart_price: 1
+  cart_income: 1
+  used_price: 1
+  used_income: 1
+  check2: false
+  title: MyString
+  mpn: MyString
+  item_image: MyString

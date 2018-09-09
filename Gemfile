@@ -67,6 +67,7 @@ gem 'rails_admin'
 gem 'bootstrap-sass'
 gem 'rails_12factor'
 gem 'jquery-turbolinks'
+gem 'tether-rails'
 
 # gem for background processing
 gem 'redis'
