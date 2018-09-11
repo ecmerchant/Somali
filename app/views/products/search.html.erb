@@ -12,6 +12,27 @@
 <script>
   $(document).ready(function(){
     // create table for ASIN
+    var convh = {
+      "asin": "ASIN",
+      "condition" : "商品状態",
+      "new_sale1" : "新品過去1ヶ月",
+      "new_sale2" : "新品過去2ヶ月",
+      "new_sale3" : "新品過去3ヶ月",
+      "new_avg3" : "新品3ヶ月平均",
+      "used_sale1" : "中古過去1ヶ月",
+      "used_sale2" : "中古過去2ヶ月",
+      "used_sale3" : "中古過去3ヶ月",
+      "used_avg3" : "中古3ヶ月平均",
+      "check1" : "チェック1",
+      "cart_price" : "カート価格",
+      "cart_income" : "カート入金",
+      "used_price" : "中古最安値",
+      "used_income" : "中古入金",
+      "check2" : "チェック2",
+      "title" : "商品名",
+      "mpn" : "型番",
+      "item_image" : "商品画像"
+    }
     var cheaders = [];
     var cwidth = [];
     var mydata = [];
@@ -20,8 +41,15 @@
     <% jj = 0 %>
     <% Product.column_names.each_with_index do |name, i| %>
       <% if i > 1 && i < Product.column_names.length - 2 then %>
-        cheaders.push("<%= name %>");
-        cwidth.push(100);
+        cheaders.push(convh["<%= name %>"]);
+        cwidth.push(150);
+        <% if i == 12 || i == 17 then %>
+          colOption.push({className: "htCenter htMiddle", type:"checkbox", uncheckedTemplate: null});
+        <% elsif i == 20 then %>
+          colOption.push({className: "htCenter htMiddle", renderer: 'html'});
+        <% else %>
+          colOption.push({className: "htCenter htMiddle"});
+        <% end %>
         <% data.push(@products.pluck(name)) %>
       <% end %>
     <% end %>
@@ -30,12 +58,14 @@
 
     var maxColnum = cheaders.length;
     var maxRownum = <%= data.length %> + 5;
-    var colOption = [];
 
     <% data.each_with_index do |row, ii| %>
       mydata[<%= ii %>] = [];
       <% row.each_with_index do |col, jj| %>
         mydata[<%= ii %>][<%= jj %>] = "<%= col %>";
+        <% if jj == 18 then %>
+          mydata[<%= ii %>][<%= jj %>] = '<img src="<%= col %>" height="40" >';
+        <% end %>
       <% end %>
     <% end %>
 
@@ -50,7 +80,7 @@
     var handsontable = new Handsontable(container, {
       /* オプション */
       width: 1100,
-      height: 380,
+      height: 320,
       contextMenu: true,
       data: mydata,
       rowHeaders: true,
@@ -60,7 +90,9 @@
       manualColumnResize: true,
       autoColumnSize: false,
       colWidths: cwidth,
-      wordWrap: false
+      rowHeights: 60,
+      wordWrap: false,
+      columns: colOption
     });
 
 
@@ -86,11 +118,27 @@
         dataType: "json",
         success: function (result) {
           alert("OK");
-          alert(result);
-          mydata[rnum] = result;
-          handsontable.loadData(mydata);
+          //mydata[rnum] = result;
+          console.log("start");
+          var cheaders = Object.keys(convh);
+          var temp = [];
+
+          for(var k = 0; k < cheaders.length; k++){
+            console.log(cheaders[k]);
+            console.log(result[cheaders[k]]);
+            temp[k] = [];
+            if(cheaders[k] == "item_image"){
+              temp[k] = [rnum, k, '<img src="' & result[cheaders[k]] & '">"'];
+            }else{
+              temp[k] = [rnum, k, result[cheaders[k]]];
+            }
+
+          }
+          handsontable.setDataAtCell(temp);
+          handsontable.render();
+          console.log("end");
           rnum++;
-          if(rnum > 4){
+          if(rnum > 2){
             return;
           }
           repeat(rnum);

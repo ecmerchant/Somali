@@ -50,6 +50,10 @@ class ProductsController < ApplicationController
 
       user = current_user.email
       asin = res[rnum]
+      logger.debug("==== Get Start ====")
+      logger.debug(asin)
+      logger.debug(rnum)
+      logger.debug("==== ==== ====")
       temp = Product.new
       result = temp.collect(user, asin)
 

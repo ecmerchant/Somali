@@ -6,7 +6,7 @@ class Product < ApplicationRecord
   require 'date'
 
   def collect(user, asin)
-
+    puts asin
     url = 'https://delta-tracer.com/item/chart_html/jp/' + asin
     charset = nil
     begin
@@ -111,14 +111,33 @@ class Product < ApplicationRecord
 
     cart = html.match(/新品カート<\/strong>([\s\S]*?)<\/tr>/)[1]
     cart = cart.scan(/<strong>([\s\S]*?)<\/strong>/)
-    cart_price = cart[0][0]
-    cart_profit = cart[1][0]
+    if cart != nil then
+      if cart[0] != nil then
+        cart_price = cart[0][0].gsub(",","")
+        cart_profit = cart[1][0].gsub(",","")
+      else
+        cart_price = 0
+        cart_profit = 0
+      end
+    else
+      cart_price = 0
+      cart_profit = 0
+    end
 
     used = html.match(/中古<\/strong>([\s\S]*?)<\/tr>/)[1]
     used = used.scan(/<strong>([\s\S]*?)<\/strong>/)
-    used_price = used[0][0]
-    used_profit = used[1][0]
-
+    if used != nil then
+      if used[0] != nil then
+        used_price = used[0][0].gsub(",","")
+        used_profit = used[1][0].gsub(",","")
+      else
+        used_price = 0
+        used_profit = 0
+      end
+    else
+      used_price = 0
+      used_profit = 0
+    end
     title = html.match(/<strong style="word-break:break-all;">([\s\S]*?)<\/strong>/)[1]
     mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)[1]
     temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)[1]
