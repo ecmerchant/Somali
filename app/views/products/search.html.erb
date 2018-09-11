@@ -97,7 +97,7 @@
 
 
     $("#run_search").click(function () {
-      alert("go");
+      alert("Start");
       var body = handsontable.getDataAtCol(0);
       body = JSON.stringify(body);
       var rnum = 0;
@@ -117,7 +117,6 @@
         data: myData,
         dataType: "json",
         success: function (result) {
-          alert("OK");
           //mydata[rnum] = result;
           console.log("start");
           var cheaders = Object.keys(convh);
@@ -128,7 +127,7 @@
             console.log(result[cheaders[k]]);
             temp[k] = [];
             if(cheaders[k] == "item_image"){
-              temp[k] = [rnum, k, '<img src="' & result[cheaders[k]] & '">"'];
+              temp[k] = [rnum, k, '<img src="' & result[cheaders[k]] & '" height="40">'];
             }else{
               temp[k] = [rnum, k, result[cheaders[k]]];
             }
@@ -138,7 +137,8 @@
           handsontable.render();
           console.log("end");
           rnum++;
-          if(rnum > 2){
+          if(body[rnum] == ""){
+            alert("End");
             return;
           }
           repeat(rnum);
