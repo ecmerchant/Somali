@@ -107,8 +107,8 @@
     });
 
     function repeat(rnum){
-      var body = handsontable.getDataAtCol(0);
-      body = JSON.stringify(body);
+      var org = handsontable.getDataAtCol(0);
+      body = JSON.stringify(org);
       var myData = {data: body, rnum: rnum};
 
       $.ajax({
@@ -127,7 +127,8 @@
             console.log(result[cheaders[k]]);
             temp[k] = [];
             if(cheaders[k] == "item_image"){
-              temp[k] = [rnum, k, '<img src="' & result[cheaders[k]] & '" height="40">'];
+              temp[k] = [rnum, k, '<img src="' + result[cheaders[k]] + '" height="40">'];
+              console.log(temp[k]);
             }else{
               temp[k] = [rnum, k, result[cheaders[k]]];
             }
@@ -137,7 +138,8 @@
           handsontable.render();
           console.log("end");
           rnum++;
-          if(body[rnum] == ""){
+          console.log(org[rnum]);
+          if(org[rnum] == ""){
             alert("End");
             return;
           }
