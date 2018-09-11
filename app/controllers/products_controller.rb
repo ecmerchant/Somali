@@ -54,6 +54,7 @@ class ProductsController < ApplicationController
       logger.debug(asin)
       logger.debug(rnum)
       logger.debug("==== ==== ====")
+      
       temp = Product.new
       result = temp.collect(user, asin)
 
