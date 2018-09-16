@@ -215,7 +215,7 @@ class Product < ApplicationRecord
     puts '===== END ======'
 
     hit = Product.where(user: user).find_or_create_by(asin: asin)
-
+    
     if check1 != "true" && check2 != "true" then
       logger.debug("case1")
       result = {
