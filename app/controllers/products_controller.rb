@@ -16,6 +16,8 @@ class ProductsController < ApplicationController
   end
 
   def search
+    @limit = ENV['MAX_ROWNUM']
+    logger.debug(@limit)
     @login_user = current_user
     @account = Account.find_or_create_by(user: current_user.email)
     @products = Product.where(user: current_user.email)

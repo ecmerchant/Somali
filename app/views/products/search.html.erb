@@ -65,13 +65,13 @@
     <% data = data.transpose %>
 
     var maxColnum = cheaders.length;
-    var maxRownum = <%= data.length %> + 100;
-    var limit = <%= ENV[MAX_ROWNUM] %>;
+    var maxRownum = 500;
+    var limit = <%= @limit %>;
     if(limit != null){
-      if(maxRownum < <%= ENV[MAX_ROWNUM] %>){
-        maxRownum = <%= ENV[MAX_ROWNUM] %>;
+      if(maxRownum < limit){
+        maxRownum = limit;
       }
-    }    
+    }
 
     <% data.each_with_index do |row, ii| %>
       mydata[<%= ii %>] = [];
@@ -83,7 +83,7 @@
       <% end %>
     <% end %>
 
-    for(var k = <%= data.length %>; k < <%= data.length %> + 5; k++){
+    for(var k = <%= data.length %>; k < <%= data.length %> + 100; k++){
       mydata[k] = [];
       for(var m = 0; m < cheaders.length; m++){
         mydata[k][m] = "";
