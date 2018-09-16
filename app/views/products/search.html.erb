@@ -65,7 +65,13 @@
     <% data = data.transpose %>
 
     var maxColnum = cheaders.length;
-    var maxRownum = <%= data.length %> + 5;
+    var maxRownum = <%= data.length %> + 100;
+    var limit = <%= ENV[MAX_ROWNUM] %>;
+    if(limit != null){
+      if(maxRownum < <%= ENV[MAX_ROWNUM] %>){
+        maxRownum = <%= ENV[MAX_ROWNUM] %>;
+      }
+    }    
 
     <% data.each_with_index do |row, ii| %>
       mydata[<%= ii %>] = [];
