@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <h3>商品情報を取得</h3>
-      <button id="run_search" class="btn btn-primary">取得開始</button>
+        <button id="run_search" class="btn btn-primary" style="margin-right: 20px;">取得開始</button>
+        <button id="update_data" class="btn btn-primary">データ更新</button>
       <div><br></div>
       <div id="result_table"></div>
     </div>
@@ -31,7 +32,11 @@
       "check2" : "チェック2",
       "title" : "商品名",
       "mpn" : "型番",
-      "item_image" : "商品画像"
+      "item_image" : "商品画像",
+      "new_bid_price" : "新品入札価格",
+      "used_bid_price" : "中古入札価格",
+      "new_negotiate_price" : "新品交渉価格",
+      "used_negotiate_price" : "中古交渉価格"
     }
     var cheaders = [];
     var cwidth = [];
@@ -40,9 +45,9 @@
     <% data = Array.new %>
     <% jj = 0 %>
     <% Product.column_names.each_with_index do |name, i| %>
-      <% if i > 1 && i < Product.column_names.length - 2 then %>
+      <% if (i > 1 && i < Product.column_names.length - 6) || (i > Product.column_names.length - 5 ) then %>
         cheaders.push(convh["<%= name %>"]);
-        cwidth.push(150);
+        cwidth.push(120);
         <% if i == 12 || i == 17 then %>
           colOption.push({className: "htCenter htMiddle", type:"checkbox", uncheckedTemplate: null});
         <% elsif i == 20 then %>
@@ -53,7 +58,10 @@
         <% data.push(@products.pluck(name)) %>
       <% end %>
     <% end %>
-
+    cwidth[1] = 90;
+    cwidth[10] = 90;
+    cwidth[15] = 90;
+    cwidth[16] = 280;
     <% data = data.transpose %>
 
     var maxColnum = cheaders.length;
@@ -95,19 +103,41 @@
       columns: colOption
     });
 
-
-    $("#run_search").click(function () {
-      alert("Start");
-      var body = handsontable.getDataAtCol(0);
+    $("#update_data").click(function () {
+      alert("record");
+      var body = handsontable.getData();
+      var head = convh;
       body = JSON.stringify(body);
-      var rnum = 0;
-
-      repeat(rnum);
+      head = JSON.stringify(head);
+      var myData = {data: body, header: head};
+      $.ajax({
+        url: "/products/record",
+        type: "POST",
+        data: myData,
+        dataType: "json",
+        success: function (result) {
+          //mydata[rnum] = result;
+          console.log("start");
+          var cheaders = Object.keys(convh);
+          var temp = [];
+        },
+        error: function () {
+          alert("NG");
+        }
+      });
 
     });
 
+    $("#run_search").click(function () {
+      alert("Start");
+      var body = handsontable.getData();
+      body = JSON.stringify(body);
+      var rnum = 0;
+      repeat(rnum);
+    });
+
     function repeat(rnum){
-      var org = handsontable.getDataAtCol(0);
+      var org = handsontable.getData();
       body = JSON.stringify(org);
       var myData = {data: body, rnum: rnum};
 
@@ -121,7 +151,7 @@
           console.log("start");
           var cheaders = Object.keys(convh);
           var temp = [];
-
+          console.log(result);
           for(var k = 0; k < cheaders.length; k++){
             console.log(cheaders[k]);
             console.log(result[cheaders[k]]);
@@ -139,7 +169,7 @@
           console.log("end");
           rnum++;
           console.log(org[rnum]);
-          if(org[rnum] == ""){
+          if(org[rnum][0] == ""){
             alert("End");
             return;
           }

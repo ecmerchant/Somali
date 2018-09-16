@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   post 'products/get'
 
+  post 'products/record'
+
   get 'products/setup'
   post 'products/setup'
 

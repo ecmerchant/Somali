@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180907175557) do
+ActiveRecord::Schema.define(version: 20180915171430) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "user"
@@ -18,8 +18,12 @@ ActiveRecord::Schema.define(version: 20180907175557) do
     t.string   "mws_auth_token"
     t.string   "mws_aws_key"
     t.string   "mws_secret_key"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "profit_rate"
+    t.integer  "shipping"
+    t.string   "sub_keyword"
+    t.integer  "used_profit_rate"
   end
 
   create_table "products", force: :cascade do |t|
@@ -43,8 +47,12 @@ ActiveRecord::Schema.define(version: 20180907175557) do
     t.string   "title"
     t.string   "mpn"
     t.string   "item_image"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "new_bid_price"
+    t.integer  "used_bid_price"
+    t.integer  "new_negotiate_price"
+    t.integer  "used_negotiate_price"
   end
 
   create_table "users", force: :cascade do |t|

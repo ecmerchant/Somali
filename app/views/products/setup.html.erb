@@ -4,14 +4,18 @@
       <h3>ツールの設定</h3>
       <div class="col-lg-6">
         <%= form_for(@account, {url: products_setup_path, method: 'post'}) do |f| %>
-          <p class="lead">MWSアカウントの設定</p>
+          <p class="lead">利益計算の設定</p>
           <div class="form-group">
-            <%= f.label :seller_id, "セラーID" %>
-            <%= f.text_field :seller_id, class: 'form-control' %>
+            <%= f.label :profit_rate, "新品利益率" %>
+            <%= f.text_field :profit_rate, class: 'form-control' %>
           </div>
           <div class="form-group">
-            <%= f.label :mws_auth_token, "MWS認証トークン" %>
-            <%= f.text_field :mws_auth_token, class: 'form-control'  %>
+            <%= f.label :used_profit_rate, "中古利益率" %>
+            <%= f.text_field :used_profit_rate, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :shipping, "送料" %>
+            <%= f.text_field :shipping, class: 'form-control'  %>
           </div>
           <div class="actions">
             <%= f.submit "設定する", {id: "setup_btn", onClick: 'alert("更新しました")'} %>
