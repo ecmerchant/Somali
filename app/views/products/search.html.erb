@@ -3,7 +3,8 @@
     <div class="col-lg-12 col-md-12">
       <h3>商品情報を取得</h3>
         <button id="run_search" class="btn btn-primary" style="margin-right: 20px;">取得開始</button>
-        <button id="update_data" class="btn btn-primary">データ更新</button>
+        <button id="update_data" class="btn btn-primary" style="margin-right: 20px;">データ更新</button>
+        <!-- <button id="add_row" class="btn btn-primary" style="margin-right: 20px;">行追加</button> -->
       <div><br></div>
       <div id="result_table"></div>
     </div>
@@ -70,7 +71,7 @@
     <% data = data.transpose %>
 
     var maxColnum = cheaders.length;
-    var maxRownum = 500;
+    var maxRownum = 5000;
     var limit = <%= @limit %>;
     if(limit != null){
       if(maxRownum < limit){
@@ -88,7 +89,7 @@
       <% end %>
     <% end %>
 
-    for(var k = <%= data.length %>; k < <%= data.length %> + 100; k++){
+    for(var k = <%= data.length %>; k < <%= data.length %> + 5000; k++){
       mydata[k] = [];
       for(var m = 0; m < cheaders.length; m++){
         mydata[k][m] = "";
@@ -111,6 +112,7 @@
       colWidths: cwidth,
       rowHeights: 60,
       wordWrap: false,
+      columnSorting: true,
       columns: colOption
     });
 
@@ -191,6 +193,21 @@
         }
       });
     };
+
+    var em = [];
+    for(var p = 0; p < maxColnum; p++){
+      em.push("");
+    }
+    $("#add_row").click(function () {
+      alert("行を追加します");
+      var body = handsontable.getData();
+      var mr = body.length;
+      for(var j = 0; j < 100; j++){
+        body[mr + j] = em;
+      }
+      handsontable.loadData(body);
+      handsontable.render();
+    });
 
   });
 </script>

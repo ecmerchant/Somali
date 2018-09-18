@@ -9,7 +9,8 @@ class ProductsController < ApplicationController
   require 'kconv'
   require 'activerecord-import'
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, :except => [:regist]
+  protect_from_forgery :except => [:regist]
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to root_url, :alert => exception.message
@@ -17,6 +18,7 @@ class ProductsController < ApplicationController
 
   def search
     @limit = ENV['MAX_ROWNUM']
+    if @limit == nil then @limit = 1000 end
     logger.debug(@limit)
     @login_user = current_user
     @account = Account.find_or_create_by(user: current_user.email)
@@ -103,6 +105,23 @@ class ProductsController < ApplicationController
     if request.post? then
       @account.update(user_params)
     end
+  end
+
+  def regist
+    if request.post? then
+      user = params[:user]
+      password = params[:password]
+      logger.debug("====== Regist from Form =======")
+      logger.debug(user)
+      logger.debug(password)
+      tuser = User.find_or_initialize_by(email: user)
+      if tuser.new_record? # 新規作成の場合は保存
+        tuser = User.create(email: user, password: password)
+      end
+      Account.find_or_create_by(user: user)
+      logger.debug("====== Regist from Form End =======")
+    end
+    redirect_to products_search_path
   end
 
   private

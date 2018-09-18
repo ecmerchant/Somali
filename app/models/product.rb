@@ -88,7 +88,10 @@ class Product < ApplicationRecord
       end
     end
 
-    avg_new = (counter3 - (used_counter3)) / 3
+    avg_new = (new_counter3) / 3
+    if new_counter3 > 0 && avg_new == 0 then
+      avg_new = 1
+    end
     avg_used = (used_counter3) / 3
 
     puts '===== VALUES ======'
@@ -215,7 +218,7 @@ class Product < ApplicationRecord
     puts '===== END ======'
 
     hit = Product.where(user: user).find_or_create_by(asin: asin)
-    
+
     if check1 != "true" && check2 != "true" then
       logger.debug("case1")
       result = {
