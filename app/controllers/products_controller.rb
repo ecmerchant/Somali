@@ -27,6 +27,31 @@ class ProductsController < ApplicationController
       @products = Product.create(user: current_user.email)
     end
     @header = Product.column_names
+    @header = [
+      "asin",
+      "new_sale1",
+      "new_sale2",
+      "new_sale3",
+      "new_avg3",
+      "used_sale1",
+      "used_sale2",
+      "used_sale3",
+      "used_avg3",
+      "check1",
+      "cart_price",
+      "cart_income",
+      "used_price",
+      "used_income",
+      "check2",
+      "title",
+      "mpn",
+      "item_image",
+      "check3",
+      "new_bid_price",
+      "used_bid_price",
+      "new_negotiate_price",
+      "used_negotiate_price"
+    ]
 
     if request.post? then
       logger.debug("post")
@@ -73,8 +98,11 @@ class ProductsController < ApplicationController
       logger.debug("====== HEAD =======")
       logger.debug(head)
 
+      products.delete_all
+
       body.each do |row|
         if row[0] != "" then
+
           thash = Hash.new
           i = 0
           head.each_key do |key|
@@ -87,7 +115,7 @@ class ProductsController < ApplicationController
           end
           logger.debug("====== HASH =======")
           logger.debug(thash)
-          target = products.find_by(asin: row[0])
+          target = products.find_or_create_by(asin: row[0])
           if target != nil then
             target.update(thash)
           end

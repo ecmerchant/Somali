@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180915171430) do
+ActiveRecord::Schema.define(version: 20180919152705) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "user"
@@ -29,7 +29,6 @@ ActiveRecord::Schema.define(version: 20180915171430) do
   create_table "products", force: :cascade do |t|
     t.string   "user"
     t.string   "asin"
-    t.string   "condition"
     t.integer  "new_sale1"
     t.integer  "new_sale2"
     t.integer  "new_sale3"
@@ -53,6 +52,7 @@ ActiveRecord::Schema.define(version: 20180915171430) do
     t.integer  "used_bid_price"
     t.integer  "new_negotiate_price"
     t.integer  "used_negotiate_price"
+    t.boolean  "check3"
   end
 
   create_table "users", force: :cascade do |t|

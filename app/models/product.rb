@@ -6,13 +6,15 @@ class Product < ApplicationRecord
   require 'date'
 
   def collect(user, data)
-
+    logger.debug("==============")
     asin = data[0]
     logger.debug(asin)
-    check1 = data[10].to_s
-    check2 = data[15].to_s
+    check1 = data[9].to_s
+    check2 = data[14].to_s
+    check3 = data[18].to_s
     logger.debug(check1)
     logger.debug(check2)
+    logger.debug(check3)
     url = 'https://delta-tracer.com/item/chart_html/jp/' + asin
     charset = nil
     begin
@@ -219,115 +221,55 @@ class Product < ApplicationRecord
 
     hit = Product.where(user: user).find_or_create_by(asin: asin)
 
-    if check1 != "true" && check2 != "true" then
-      logger.debug("case1")
-      result = {
-        asin: asin,
-        new_sale1: new_counter1,
-        new_sale2: new_counter2,
-        new_sale3: new_counter3,
-        used_sale1: used_counter1,
-        used_sale2: used_counter2,
-        used_sale3: used_counter3,
-        new_avg3: avg_new,
-        used_avg3: avg_used,
-        check1: check1,
-        cart_price: cart_price,
-        cart_income: cart_profit,
-        used_price: used_price,
-        used_income: used_profit,
-        check2: check2,
-        title: title,
-        mpn: mpn,
-        item_image: image,
-        new_bid_price: new_bid_price,
-        used_bid_price: used_bid_price,
-        new_negotiate_price: new_negotiate_price,
-        used_negotiate_price: used_negotiate_price
-      }
-      hit.update(result)
-    elsif check1 == "true" && check2 != "true" then
-      logger.debug("case2")
-      result = {
-        asin: asin,
-        new_sale1: new_counter1,
-        new_sale2: new_counter2,
-        new_sale3: new_counter3,
-        used_sale1: used_counter1,
-        used_sale2: used_counter2,
-        used_sale3: used_counter3,
-        new_avg3: avg_new,
-        used_avg3: avg_used,
-        check1: check1,
-        cart_price: data[11],
-        cart_income: data[12],
-        used_price: data[13],
-        used_income: data[14],
-        check2: check2,
-        title: title,
-        mpn: mpn,
-        item_image: image,
-        new_bid_price: new_bid_price,
-        used_bid_price: used_bid_price,
-        new_negotiate_price: new_negotiate_price,
-        used_negotiate_price: used_negotiate_price
-      }
-      hit.update(result)
-    elsif check2 == "true" && check1 != "true" then
-      logger.debug("case3")
-      result = {
-        asin: asin,
-        new_sale1: new_counter1,
-        new_sale2: new_counter2,
-        new_sale3: new_counter3,
-        used_sale1: used_counter1,
-        used_sale2: used_counter2,
-        used_sale3: used_counter3,
-        new_avg3: avg_new,
-        used_avg3: avg_used,
-        check1: check1,
-        cart_price: cart_price,
-        cart_income: cart_profit,
-        used_price: used_price,
-        used_income: used_profit,
-        check2: check2,
-        title: data[16],
-        mpn: data[17],
-        item_image: /src="([\s\S]*?)"/.match(data[18])[1],
-        new_bid_price: new_bid_price,
-        used_bid_price: used_bid_price,
-        new_negotiate_price: new_negotiate_price,
-        used_negotiate_price: used_negotiate_price
-      }
-      hit.update(result)
-    elsif check2 == "true" && check1 == "true" then
-      logger.debug("case4")
-      result = {
-        asin: asin,
-        new_sale1: new_counter1,
-        new_sale2: new_counter2,
-        new_sale3: new_counter3,
-        used_sale1: used_counter1,
-        used_sale2: used_counter2,
-        used_sale3: used_counter3,
-        new_avg3: avg_new,
-        used_avg3: avg_used,
-        check1: check1,
-        cart_price: data[11],
-        cart_income: data[12],
-        used_price: data[13],
-        used_income: data[14],
-        check2: check2,
-        title: data[16],
-        mpn: data[17],
-        item_image: /src="([\s\S]*?)"/.match(data[18])[1],
-        new_bid_price: new_bid_price,
-        used_bid_price: used_bid_price,
-        new_negotiate_price: new_negotiate_price,
-        used_negotiate_price: used_negotiate_price
-      }
-      hit.update(result)
+    if check1 == "true" then
+      logger.debug("check1")
+      cart_price = data[10].to_i
+      cart_income = data[11].to_i
+      used_price = data[12].to_i
+      used_income = data[13].to_i
     end
+
+    if check2 == "true" then
+      logger.debug("check2")
+      title = data[15].to_s
+      mpn = data[16].to_s
+      image = /src="([\s\S]*?)"/.match(data[17])[1]
+    end
+
+    if check3 == "true" then
+      logger.debug("check3")
+      new_bid_price = data[19].to_i
+      used_bid_price = data[20].to_i
+      new_negotiate_price = data[21].to_i
+      used_negotiate_price = data[22].to_i
+    end
+
+    result = {
+      asin: asin,
+      new_sale1: new_counter1,
+      new_sale2: new_counter2,
+      new_sale3: new_counter3,
+      used_sale1: used_counter1,
+      used_sale2: used_counter2,
+      used_sale3: used_counter3,
+      new_avg3: avg_new,
+      used_avg3: avg_used,
+      check1: check1,
+      cart_price: cart_price,
+      cart_income: cart_profit,
+      used_price: used_price,
+      used_income: used_profit,
+      check2: check2,
+      title: title,
+      mpn: mpn,
+      item_image: image,
+      check3: check3,
+      new_bid_price: new_bid_price,
+      used_bid_price: used_bid_price,
+      new_negotiate_price: new_negotiate_price,
+      used_negotiate_price: used_negotiate_price
+    }
+    hit.update(result)
 
     return result
 

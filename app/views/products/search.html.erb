@@ -16,7 +16,6 @@
     // create table for ASIN
     var convh = {
       "asin": "ASIN",
-      "condition" : "商品状態",
       "new_sale1" : "新品過去1ヶ月",
       "new_sale2" : "新品過去2ヶ月",
       "new_sale3" : "新品過去3ヶ月",
@@ -34,6 +33,7 @@
       "title" : "商品名",
       "mpn" : "型番",
       "item_image" : "商品画像",
+      "check3" : "チェック3",
       "new_bid_price" : "新品入札価格",
       "used_bid_price" : "中古入札価格",
       "new_negotiate_price" : "新品交渉価格",
@@ -45,29 +45,28 @@
     var colOption = [];
     <% data = Array.new %>
     <% jj = 0 %>
-    <% Product.column_names.each_with_index do |name, i| %>
-      <% if (i > 1 && i < Product.column_names.length - 6) || (i > Product.column_names.length - 5 ) then %>
+    <% @header.each_with_index do |name, i| %>
         cheaders.push(convh["<%= name %>"]);
         cwidth.push(120);
-        <% if i == 12 || i == 17 then %>
+        <% if i == 9 || i == 14 || i == 18 then %>
           colOption.push({className: "htCenter htMiddle", type:"checkbox", uncheckedTemplate: null});
-        <% elsif i == 20 then %>
+        <% elsif i == 17 then %>
           colOption.push({className: "htCenter htMiddle", renderer: 'html'});
         <% else %>
           colOption.push({className: "htCenter htMiddle"});
         <% end %>
         <% data.push(@products.pluck(name)) %>
-      <% end %>
+
     <% end %>
-    cwidth[1] = 90;
+
+    cwidth[9] = 90;
     cwidth[10] = 90;
     cwidth[11] = 90;
     cwidth[12] = 90;
     cwidth[13] = 90;
     cwidth[14] = 90;
-    cwidth[15] = 90;
-    cwidth[16] = 280;
-    cwidth[18] = 100;
+    cwidth[15] = 280;
+    cwidth[17] = 100;
     <% data = data.transpose %>
 
     var maxColnum = cheaders.length;
@@ -83,7 +82,7 @@
       mydata[<%= ii %>] = [];
       <% row.each_with_index do |col, jj| %>
         mydata[<%= ii %>][<%= jj %>] = "<%= col %>";
-        <% if jj == 18 then %>
+        <% if jj == 17 then %>
           mydata[<%= ii %>][<%= jj %>] = '<img src="<%= col %>" height="40" >';
         <% end %>
       <% end %>
@@ -133,6 +132,7 @@
           console.log("start");
           var cheaders = Object.keys(convh);
           var temp = [];
+          alert("Update");
         },
         error: function () {
           alert("NG");
