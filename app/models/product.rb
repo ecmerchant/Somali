@@ -244,6 +244,14 @@ class Product < ApplicationRecord
       used_negotiate_price = data[22].to_i
     end
 
+    used_counter3 = used_counter3 - used_counter2
+    used_counter2 = used_counter2 - used_counter1
+    new_counter3 = counter3 - counter2 - used_counter3
+    new_counter2 = counter2 - counter1 - used_counter2
+    new_counter1 = counter1 - used_counter1
+
+    avg_new = (new_counter3 + new_counter2 + new_counter1) / 3
+
     result = {
       asin: asin,
       new_sale1: new_counter1,
