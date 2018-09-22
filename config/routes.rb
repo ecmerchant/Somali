@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'products/setup'
   post 'products/setup'
 
+  post 'products/regist'
+
   mount Resque::Server.new, at: "/resque"
 
   devise_scope :user do
