@@ -69,7 +69,7 @@ class ProductsController < ApplicationController
       body = params[:data]
       rnum = params[:rnum].to_i
       res = JSON.parse(body)
-      logger.debug(res)
+      #logger.debug(res)
       user = current_user.email
       data = res[rnum]
       logger.debug("==== Get Start ====")

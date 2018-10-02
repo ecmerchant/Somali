@@ -6,7 +6,7 @@ class Product < ApplicationRecord
   require 'date'
 
   def collect(user, data)
-    logger.debug("==============")
+    logger.debug("====== Collect ========")
     asin = data[0]
     logger.debug(asin)
     check1 = data[9].to_s
@@ -140,7 +140,11 @@ class Product < ApplicationRecord
     if used != nil then
       if used[0] != nil then
         used_price = used[0][0].gsub(",","").to_i
-        used_profit = used[1][0].gsub(",","").to_i
+        if used[1] != nil then
+          used_profit = used[1][0].gsub(",","").to_i
+        else
+          used_profit = 0
+        end  
       else
         used_price = 0
         used_profit = 0
