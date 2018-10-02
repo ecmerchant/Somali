@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
   post 'products/regist'
 
+  post 'products/delete'
+
   mount Resque::Server.new, at: "/resque"
 
   devise_scope :user do

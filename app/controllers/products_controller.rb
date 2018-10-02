@@ -67,14 +67,15 @@ class ProductsController < ApplicationController
   def get
     if request.post? then
       body = params[:data]
-      rnum = params[:rnum].to_i
+      #rnum = params[:rnum].to_i
       res = JSON.parse(body)
       #logger.debug(res)
       user = current_user.email
-      data = res[rnum]
+      #data = res[rnum]
+      data = res
       logger.debug("==== Get Start ====")
       logger.debug(data)
-      logger.debug(rnum)
+      #logger.debug(rnum)
       logger.debug("==== ==== ====")
 
       temp = Product.new
@@ -133,6 +134,16 @@ class ProductsController < ApplicationController
     if request.post? then
       @account.update(user_params)
     end
+  end
+
+
+  def delete
+    @login_user = current_user
+    temp = Product.where(user: current_user.email)
+    if request.post? then
+      temp.delete_all
+    end
+    render json: ["ok"]
   end
 
   def regist

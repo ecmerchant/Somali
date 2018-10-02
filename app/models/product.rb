@@ -170,65 +170,71 @@ class Product < ApplicationRecord
       used_profit = 0
     end
 
-    title = html.match(/<strong style="word-break:break-all;">([\s\S]*?)<\/strong>/)[1]
-    mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)[1]
-    temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)[1]
-    image = temp.match(/src="([\s\S]*?)"/)[1]
+    title = html.match(/<strong style="word-break:break-all;">([\s\S]*?)<\/strong>/)
+    if title != nil then
+      title = title[1]
+      mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)[1]
+      temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)[1]
+      image = temp.match(/src="([\s\S]*?)"/)[1]
 
-    if check1 == "true" then
-      cart_price = data[11].to_i
-      cart_profit = data[12].to_i
-      used_price = data[13].to_i
-      used_profit = data[14].to_i
-    end
-
-    logger.debug(cart_price)
-    logger.debug(cart_profit)
-    logger.debug(used_price)
-    logger.debug(used_profit)
-
-    #計算
-    tuser = Account.find_by(user: user)
-    profit_rate = (tuser.profit_rate.to_f / 100.to_f).to_f
-    used_profit_rate = (tuser.used_profit_rate.to_f / 100.to_f).to_f
-    shipping = tuser.shipping
-
-    puts profit_rate
-    puts shipping
-
-    if cart_price != 0 then
-      new_bid_price = cart_profit.to_f - shipping.to_f - (cart_price.to_f * profit_rate).to_f
-      new_bid_price = new_bid_price.round(-2)
-
-      if cart_profit * (1.to_f - profit_rate).to_f < 10000 then
-        temp = cart_profit.to_f * (1.to_f - profit_rate).to_f
-        new_negotiate_price = (temp.to_i / 500.to_i) * 500
-      else
-        temp = cart_profit.to_f * (1.to_f - profit_rate).to_f
-        new_negotiate_price = (temp.to_i / 1000.to_i) * 1000
-      end
-    else
-      new_bid_price = 0
-      new_negotiate_price = 0
-    end
-
-    if used_price != 0 then
-      used_bid_price = used_profit.to_f - shipping.to_f - (used_price.to_f * used_profit_rate).to_f
-      used_bid_price = used_bid_price.round(-2)
-
-      if used_profit * (1.to_f - used_profit_rate).to_f < 10000 then
-        temp = used_profit.to_f * (1.to_f - used_profit_rate).to_f
-        used_negotiate_price = (temp.to_i / 500.to_i) * 500
-      else
-        temp = used_profit.to_f * (1.to_f - used_profit_rate).to_f
-        used_negotiate_price = (temp.to_i / 1000.to_i) * 1000
+      if check1 == "true" then
+        cart_price = data[11].to_i
+        cart_profit = data[12].to_i
+        used_price = data[13].to_i
+        used_profit = data[14].to_i
       end
 
-    else
-      used_bid_price = 0
-      used_negotiate_price = 0
-    end
+      logger.debug(cart_price)
+      logger.debug(cart_profit)
+      logger.debug(used_price)
+      logger.debug(used_profit)
 
+      #計算
+      tuser = Account.find_by(user: user)
+      profit_rate = (tuser.profit_rate.to_f / 100.to_f).to_f
+      used_profit_rate = (tuser.used_profit_rate.to_f / 100.to_f).to_f
+      shipping = tuser.shipping
+
+      puts profit_rate
+      puts shipping
+
+      if cart_price != 0 then
+        new_bid_price = cart_profit.to_f - shipping.to_f - (cart_price.to_f * profit_rate).to_f
+        new_bid_price = new_bid_price.round(-2)
+
+        if cart_profit * (1.to_f - profit_rate).to_f < 10000 then
+          temp = cart_profit.to_f * (1.to_f - profit_rate).to_f
+          new_negotiate_price = (temp.to_i / 500.to_i) * 500
+        else
+          temp = cart_profit.to_f * (1.to_f - profit_rate).to_f
+          new_negotiate_price = (temp.to_i / 1000.to_i) * 1000
+        end
+      else
+        new_bid_price = 0
+        new_negotiate_price = 0
+      end
+
+      if used_price != 0 then
+        used_bid_price = used_profit.to_f - shipping.to_f - (used_price.to_f * used_profit_rate).to_f
+        used_bid_price = used_bid_price.round(-2)
+
+        if used_profit * (1.to_f - used_profit_rate).to_f < 10000 then
+          temp = used_profit.to_f * (1.to_f - used_profit_rate).to_f
+          used_negotiate_price = (temp.to_i / 500.to_i) * 500
+        else
+          temp = used_profit.to_f * (1.to_f - used_profit_rate).to_f
+          used_negotiate_price = (temp.to_i / 1000.to_i) * 1000
+        end
+
+      else
+        used_bid_price = 0
+        used_negotiate_price = 0
+      end
+    else
+      title = ""
+      mpn = ""
+      image = ""      
+    end
 
     puts '===== VALUES ======'
     puts "title=" + title.to_s

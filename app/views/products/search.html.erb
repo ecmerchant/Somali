@@ -4,6 +4,7 @@
       <h3>商品情報を取得</h3>
         <button id="run_search" class="btn btn-primary" style="margin-right: 20px;">取得開始</button>
         <button id="update_data" class="btn btn-primary" style="margin-right: 20px;">データ更新</button>
+        <button id="delete_data" class="btn btn-primary" style="margin-right: 20px;">一括削除</button>
         <!-- <button id="add_row" class="btn btn-primary" style="margin-right: 20px;">行追加</button> -->
       <div><br></div>
       <div id="result_table"></div>
@@ -150,9 +151,11 @@
     });
 
     function repeat(rnum){
-      var org = handsontable.getData();
+      //var org = handsontable.getData();
+      var org = handsontable.getDataAtRow(rnum);
       body = JSON.stringify(org);
-      var myData = {data: body, rnum: rnum};
+      //var myData = {data: body, rnum: rnum};
+      var myData = {data: body};
 
       $.ajax({
         url: "/products/get",
@@ -198,6 +201,7 @@
     for(var p = 0; p < maxColnum; p++){
       em.push("");
     }
+
     $("#add_row").click(function () {
       alert("行を追加します");
       var body = handsontable.getData();
@@ -207,6 +211,26 @@
       }
       handsontable.loadData(body);
       handsontable.render();
+    });
+
+    $("#delete_data").click(function () {
+
+      var myData = {data: "delete"};
+
+      $.ajax({
+        url: "/products/delete",
+        type: "POST",
+        data: myData,
+        dataType: "json",
+        success: function () {
+          location.reload();
+          alert("削除成功");
+
+        },
+        error: function () {
+          alert("NG");
+        }
+      });
     });
 
   });
