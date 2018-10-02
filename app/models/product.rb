@@ -120,14 +120,20 @@ class Product < ApplicationRecord
       logger.debug(error)
     end
 
-    cart = html.match(/新品カート<\/strong>([\s\S]*?)<\/tr>/)[1]
-    cart = cart.scan(/<strong>([\s\S]*?)<\/strong>/)
+    cart = html.match(/新品カート<\/strong>([\s\S]*?)<\/tr>/)
     if cart != nil then
-      if cart[0] != nil then
-        cart_price = cart[0][0].gsub(",","").to_i
-        if cart[1] != nil then
-          cart_profit = cart[1][0].gsub(",","").to_i
+      cart = cart[1]
+      cart = cart.scan(/<strong>([\s\S]*?)<\/strong>/)
+      if cart != nil then
+        if cart[0] != nil then
+          cart_price = cart[0][0].gsub(",","").to_i
+          if cart[1] != nil then
+            cart_profit = cart[1][0].gsub(",","").to_i
+          else
+            cart_profit = 0
+          end
         else
+          cart_price = 0
           cart_profit = 0
         end
       else
@@ -139,14 +145,20 @@ class Product < ApplicationRecord
       cart_profit = 0
     end
 
-    used = html.match(/中古<\/strong>([\s\S]*?)<\/tr>/)[1]
-    used = used.scan(/<strong>([\s\S]*?)<\/strong>/)
+    used = html.match(/中古<\/strong>([\s\S]*?)<\/tr>/)
     if used != nil then
-      if used[0] != nil then
-        used_price = used[0][0].gsub(",","").to_i
-        if used[1] != nil then
-          used_profit = used[1][0].gsub(",","").to_i
+      used = used[1]
+      used = used.scan(/<strong>([\s\S]*?)<\/strong>/)
+      if used != nil then
+        if used[0] != nil then
+          used_price = used[0][0].gsub(",","").to_i
+          if used[1] != nil then
+            used_profit = used[1][0].gsub(",","").to_i
+          else
+            used_profit = 0
+          end
         else
+          used_price = 0
           used_profit = 0
         end
       else
@@ -157,6 +169,7 @@ class Product < ApplicationRecord
       used_price = 0
       used_profit = 0
     end
+
     title = html.match(/<strong style="word-break:break-all;">([\s\S]*?)<\/strong>/)[1]
     mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)[1]
     temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)[1]
