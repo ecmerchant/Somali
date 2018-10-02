@@ -125,7 +125,11 @@ class Product < ApplicationRecord
     if cart != nil then
       if cart[0] != nil then
         cart_price = cart[0][0].gsub(",","").to_i
-        cart_profit = cart[1][0].gsub(",","").to_i
+        if cart[1] != nil then
+          cart_profit = cart[1][0].gsub(",","").to_i
+        else
+          cart_profit = 0
+        end
       else
         cart_price = 0
         cart_profit = 0
@@ -144,7 +148,7 @@ class Product < ApplicationRecord
           used_profit = used[1][0].gsub(",","").to_i
         else
           used_profit = 0
-        end  
+        end
       else
         used_price = 0
         used_profit = 0
