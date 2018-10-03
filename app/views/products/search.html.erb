@@ -174,12 +174,12 @@
             temp[k] = [];
             if(cheaders[k] == "item_image"){
               temp[k] = [rnum, k, '<img src="' + result[cheaders[k]] + '" height="40">'];
-              console.log(temp[k]);
             }else{
               temp[k] = [rnum, k, result[cheaders[k]]];
             }
-
           }
+          console.log("===========");
+          console.log(temp);
           handsontable.setDataAtCell(temp);
           handsontable.render();
           console.log("end");
