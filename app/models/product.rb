@@ -15,7 +15,9 @@ class Product < ApplicationRecord
     logger.debug(check1)
     logger.debug(check2)
     logger.debug(check3)
+
     url = 'https://delta-tracer.com/item/chart_html/jp/' + asin
+
     charset = nil
     begin
       html = open(url) do |f|
@@ -25,6 +27,38 @@ class Product < ApplicationRecord
     rescue OpenURI::HTTPError => error
       logger.debug("===== ERROR =====")
       logger.debug(error)
+
+      hit = Product.where(user: user).find_or_create_by(asin: asin)
+
+      result = {
+        asin: asin,
+        new_sale1: 0,
+        new_sale2: 0,
+        new_sale3: 0,
+        used_sale1: 0,
+        used_sale2: 0,
+        used_sale3: 0,
+        new_avg3: 0,
+        used_avg3: 0,
+        check1: check1,
+        cart_price: 0,
+        cart_income: 0,
+        used_price: 0,
+        used_income: 0,
+        check2: check2,
+        title: "※該当商品なし",
+        mpn: "",
+        item_image: "",
+        check3: check3,
+        new_bid_price: 0,
+        used_bid_price: 0,
+        new_negotiate_price: 0,
+        used_negotiate_price: 0
+      }
+      hit.update(result)
+
+      return result
+
     end
 
     json = html.match(/JSON.parse\('([\s\S]*?)'/)[1]
@@ -106,6 +140,40 @@ class Product < ApplicationRecord
     puts "used_counter2=" + used_counter2.to_s
     puts "used_counter3=" + used_counter3.to_s
     puts '===== END ======'
+
+    if avg_new == 0 && avg_used == 0 then
+      puts '===== NO DATA ======'  
+      hit = Product.where(user: user).find_or_create_by(asin: asin)
+
+      result = {
+        asin: asin,
+        new_sale1: 0,
+        new_sale2: 0,
+        new_sale3: 0,
+        used_sale1: 0,
+        used_sale2: 0,
+        used_sale3: 0,
+        new_avg3: 0,
+        used_avg3: 0,
+        check1: check1,
+        cart_price: 0,
+        cart_income: 0,
+        used_price: 0,
+        used_income: 0,
+        check2: check2,
+        title: "※該当データなし",
+        mpn: "",
+        item_image: "",
+        check3: check3,
+        new_bid_price: 0,
+        used_bid_price: 0,
+        new_negotiate_price: 0,
+        used_negotiate_price: 0
+      }
+      hit.update(result)
+
+      return result
+    end
 
     url = "https://delta-tracer.com/item/detail/jp/" + asin
     charset = nil
@@ -233,7 +301,7 @@ class Product < ApplicationRecord
     else
       title = ""
       mpn = ""
-      image = ""      
+      image = ""
     end
 
     puts '===== VALUES ======'
