@@ -184,8 +184,8 @@
           handsontable.render();
           console.log("end");
           rnum++;
-          console.log(org[rnum]);
-          if(org[rnum][0] == ""){
+          org = handsontable.getDataAtRow(rnum);
+          if(org[0] == ""){
             alert("End");
             return;
           }
