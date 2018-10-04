@@ -142,7 +142,7 @@ class Product < ApplicationRecord
     puts '===== END ======'
 
     if avg_new == 0 && avg_used == 0 then
-      puts '===== NO DATA ======'  
+      puts '===== NO DATA ======'
       hit = Product.where(user: user).find_or_create_by(asin: asin)
 
       result = {
@@ -241,9 +241,25 @@ class Product < ApplicationRecord
     title = html.match(/<strong style="word-break:break-all;">([\s\S]*?)<\/strong>/)
     if title != nil then
       title = title[1]
-      mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)[1]
-      temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)[1]
-      image = temp.match(/src="([\s\S]*?)"/)[1]
+      mpn = html.match(/<strong>規格番号：<\/strong><input class="selectable" value="([\s\S]*?)"/)
+      if mpn != nil then
+        mpn = mpn[1]
+      else
+        mpn = ""
+      end
+
+      temp = html.match(/<table class="table-itemlist"([\s\S]*?)td>/)
+      if temp != nil then
+        temp = temp[1]
+        image = temp.match(/src="([\s\S]*?)"/)
+        if image != nil then
+          image = image[1]
+        else
+          image = ""
+        end
+      else
+        image = ""
+      end
 
       if check1 == "true" then
         cart_price = data[11].to_i
