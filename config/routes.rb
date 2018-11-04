@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post 'products/get'
 
   post 'products/record'
+  post 'products/download'
 
   get 'products/setup'
   post 'products/setup'

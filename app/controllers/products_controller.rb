@@ -163,6 +163,26 @@ class ProductsController < ApplicationController
     redirect_to products_search_path
   end
 
+  def download
+    if request.post? then
+      body = params[:data]
+      @data = JSON.parse(body)
+      respond_to do |format|
+        format.html do
+        end
+        format.csv do
+          logger.debug("csv")
+          tt = Time.now
+          strTime = tt.strftime("%Y%m%d%H%M")
+          fname = "商品データ_" + strTime + ".csv"
+          #send_data render_to_string, filename: fname, type: :csv
+          render render_to_string, filename: fname, type: :csv
+        end
+      end
+    end
+
+  end
+
   private
   def user_params
      params.require(:account).permit(:user, :seller_id, :mws_auth_token, :profit_rate, :shipping, :used_profit_rate)

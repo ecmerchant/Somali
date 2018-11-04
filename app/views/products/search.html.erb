@@ -5,7 +5,8 @@
         <button id="run_search" class="btn btn-primary" style="margin-right: 20px;">取得開始</button>
         <button id="update_data" class="btn btn-primary" style="margin-right: 20px;">データ更新</button>
         <button id="delete_data" class="btn btn-primary" style="margin-right: 20px;">一括削除</button>
-        <!-- <button id="add_row" class="btn btn-primary" style="margin-right: 20px;">行追加</button> -->
+        <button id="csv_download" class="btn btn-info" style="margin-right: 20px;">CSVダウンロード</button>
+        <a style="display:none;" id="downloader" href="#"></a>
       <div><br></div>
       <div id="result_table"></div>
     </div>
@@ -231,6 +232,21 @@
           alert("NG");
         }
       });
+    });
+
+    $("#csv_download").click(function () {
+      var array_data = handsontable.getData();
+      // BOM の用意（文字化け対策）
+      var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+      // CSV データの用意
+      var csv_data = array_data.map(function(l){return l.join(',')}).join('\r\n');
+      var blob = new Blob([bom, csv_data], { type: 'text/csv' });
+      var url = (window.URL || window.webkitURL).createObjectURL(blob);
+      var a = document.getElementById('downloader');
+      a.download = 'data.csv';
+      a.href = url;
+      // ダウンロードリンクをクリックする
+      $('#downloader')[0].click();
     });
 
   });
